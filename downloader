@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+
+<?php
+
+use Symfony\Component\Console;
+
+require 'vendor/autoload.php';
+
+var_dump('downloader!');
