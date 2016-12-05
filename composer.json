@@ -1,0 +1,22 @@
+{
+    "name": "fuguevit/nhdownloader",
+    "description": "nhentai downloader using symphony console.",
+    "keywords": "",
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fuguevit\\NHDownloader\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
