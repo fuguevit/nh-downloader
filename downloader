@@ -4,11 +4,12 @@
 
 require 'vendor/autoload.php';
 
+use Fuguevit\NHDownloader\Command;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
 // register commands
-
+$application->add(new Command);
 
 $application->run();
