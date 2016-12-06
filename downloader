@@ -2,8 +2,13 @@
 
 <?php
 
-use Symfony\Component\Console;
-
 require 'vendor/autoload.php';
 
-var_dump('downloader!');
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+// register commands
+
+
+$application->run();
