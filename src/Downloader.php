@@ -36,7 +36,7 @@ class Downloader
     {
         $res = $this->requestGalleryHtml();
         
-        var_dump($this->extractImages($res->getBody()));
+        var_dump($this->extractImages((string) $res->getBody()));
     }
 
     protected function requestGalleryHtml()
