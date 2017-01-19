@@ -58,7 +58,7 @@ class Downloader
     {
         $crawler = new DomCrawler($html);
 
-        return collect($crawler->filterXPath('//a/img')->extract(['data-scr']));
+        return collect($crawler->filterXPath('//a/img')->extract(['data-src']));
     }
 
 }
