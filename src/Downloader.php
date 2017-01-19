@@ -27,10 +27,10 @@ class Downloader
     {
         $this->id = $id;
         $this->client = new Client([
-            RequestOptions::COOKIES => false,
-            RequestOptions::CONNECT_TIMEOUT => 10,
-            RequestOptions::TIMEOUT => 10,
-            RequestOptions::ALLOW_REDIRECTS => false,
+           // RequestOptions::COOKIES => false,
+           // RequestOptions::CONNECT_TIMEOUT => 10,
+           //  RequestOptions::TIMEOUT => 10,
+           //  RequestOptions::ALLOW_REDIRECTS => false,
         ]);
         $this->initNhParams();
     }
@@ -82,11 +82,7 @@ class Downloader
      */
     protected function downloadImages($links)
     {
-        $requests = function () use ($links) {
-            foreach ($links as $key => $link) {
-                yield new Request('Get', $link);
-            }
-        };
+	$requests = $this->getImageRequests($links);
         
         $pool = new Pool($this->client, $requests, [
             'concurrency' => 10,
@@ -101,10 +97,17 @@ class Downloader
         $promise = $pool->promise();
         $promise->wait();
     }
+
+    protected function getImageRequests($links)
+    {
+	foreach($links as $key => $link) {
+	    yield new Request('Get', $link);
+	}
+    }
     
     protected function handleResponse($response, $index)
     {
-        $dir = __DIR__.'../storage/'.$this->id;
+        $dir = __DIR__.'/../storage/'.$this->id;
         if (!file_exists($dir)) {
             mkdir($dir);
         }
