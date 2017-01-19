@@ -27,10 +27,7 @@ class Downloader
     {
         $this->id = $id;
         $this->client = new Client([
-           // RequestOptions::COOKIES => false,
-           // RequestOptions::CONNECT_TIMEOUT => 10,
-           //  RequestOptions::TIMEOUT => 10,
-           //  RequestOptions::ALLOW_REDIRECTS => false,
+            RequestOptions::TIMEOUT => 10,
         ]);
         $this->initNhParams();
     }
@@ -112,7 +109,7 @@ class Downloader
             mkdir($dir);
         }
         $content = (string)$response->getBody();
-        $file = $dir.'/'.$index.'.jpg';
+        $file = $dir.'/'.($index+1).'.jpg';
         file_put_contents($file, $content);
     }
 
