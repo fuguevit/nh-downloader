@@ -23,7 +23,7 @@ class Download extends Command
         try {
             $downloader = new Downloader($input->getArgument('id'));
             $downloader->start();
-        } catch(GuzzleResultCodeError $exception) {
+        } catch (GuzzleResultCodeError $exception) {
             $output->writeln($exception->getMessage());
         }
     }
