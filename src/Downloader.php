@@ -104,7 +104,13 @@ class Downloader
     
     protected function handleResponse($response, $index)
     {
-        
+        $dir = __DIR__.'../storage/'.$this->id;
+        if (!file_exists($dir)) {
+            mkdir($dir);
+        }
+        $content = (string)$response->getBody();
+        $file = $dir.'/'.$index.'.jpg';
+        file_put_contents($file, $content);
     }
 
 }
