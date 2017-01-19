@@ -4,6 +4,9 @@ namespace Fuguevit\NHDownloader;
 
 use Fuguevit\NHDownloader\Exception\GuzzleResultCodeError;
 use GuzzleHttp\Client;
+use GuzzleHttp\Pool;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class Downloader
@@ -23,7 +26,12 @@ class Downloader
     public function __construct($id)
     {
         $this->id = $id;
-        $this->client = new Client();
+        $this->client = new Client([
+            RequestOptions::COOKIES => true,
+            RequestOptions::CONNECT_TIMEOUT => 10,
+            RequestOptions::TIMEOUT => 10,
+            RequestOptions::ALLOW_REDIRECTS => false,
+        ]);
         $this->initNhParams();
     }
 
@@ -36,7 +44,9 @@ class Downloader
     {
         $res = $this->requestGalleryHtml();
         
-        var_dump($this->extractImages((string) $res->getBody()));
+        $images = ($this->extractImages((string) $res->getBody()));
+        
+        $this->downloadImages($images);
     }
 
     protected function requestGalleryHtml()
@@ -63,8 +73,38 @@ class Downloader
                 return strpos($url, "t.nhentai.net/galleries");
             })
             ->map(function($url) {
-                return "https:".$url;
+                return "https:".str_replace('t.jpg', '.jpg', $url);
             });
+    }
+
+    /**
+     * @param $links
+     */
+    protected function downloadImages($links)
+    {
+        $requests = function () use ($links) {
+            foreach ($links as $key => $link) {
+                yield new Request('Get', $link);
+            }
+        };
+        
+        $pool = new Pool($this->client, $requests, [
+            'concurrency' => 10,
+            'fulfilled' => function($response, $index) {
+                $this->handleResponse($response, $index);
+            },
+            'rejected' => function($response, $index) {
+                // do nothing.
+            },
+        ]);
+        
+        $promise = $pool->promise();
+        $promise->wait();
+    }
+    
+    protected function handleResponse($response, $index)
+    {
+        
     }
 
 }
