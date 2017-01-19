@@ -2,16 +2,16 @@
 
 namespace Fuguevit\NHDownloader;
 
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Command extends SymfonyCommand
+class Downloader extends Command
 {
     public function configure()
     {
-        $this->setName('nh')
+        $this->setName('download')
              ->setDescription('nhentai manga downloader')
              ->addArgument('id', InputArgument::REQUIRED, 'Manga Id');
     }
