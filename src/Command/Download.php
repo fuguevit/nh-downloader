@@ -2,6 +2,7 @@
 
 namespace Fuguevit\NHDownloader\Command;
 
+use Fuguevit\NHDownloader\Downloader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +19,7 @@ class Download extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = 'Hello, You want to download manga : '.$input->getArgument('id').'? Really?';
-        $output->writeln("<info>{$message}</info>");
+        $downloader = new Downloader($input->getArgument('id'));
+        $downloader->start();
     }
 }
