@@ -58,7 +58,13 @@ class Downloader
     {
         $crawler = new DomCrawler($html);
 
-        return collect($crawler->filterXPath('//a/img')->extract(['data-src']));
+        return collect($crawler->filterXPath('//a/img')->extract(['data-src']))
+            ->filter(function($url) {
+                return strpos($url, "t.nhentai.net/galleries");
+            })
+            ->map(function($url) {
+                return "https:".$url;
+            });
     }
 
 }
