@@ -3,6 +3,7 @@
 namespace Fuguevit\NHDownloader\Command;
 
 use Fuguevit\NHDownloader\Downloader;
+use Fuguevit\NHDownloader\Exception\GuzzleResultCodeError;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +20,11 @@ class Download extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $downloader = new Downloader($input->getArgument('id'));
-        $downloader->start();
+        try {
+            $downloader = new Downloader($input->getArgument('id'));
+            $downloader->start();
+        } catch(GuzzleResultCodeError $exception) {
+            $output->writeln($exception->getMessage());
+        }
     }
 }
