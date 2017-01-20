@@ -31,15 +31,15 @@ class Download extends Command
         } catch (GuzzleResultCodeError $exception) {
             $output->writeln($exception->getMessage());
         }
-        
+
         if ($input->getOption('archive')) {
             $zipFileName = __DIR__.'/../../storage/'.$id.'.zip';
-            $za = new NHZipArchiver;
+            $za = new NHZipArchiver();
             $za->open($zipFileName, \ZipArchive::CREATE);
             $za->addDir(__DIR__.'/../../storage/'.$id, $id);
             $za->close();
         }
-        
+
         $output->writeln('Download Success!');
     }
 }
