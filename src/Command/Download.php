@@ -7,6 +7,7 @@ use Fuguevit\NHDownloader\Exception\GuzzleResultCodeError;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Download extends Command
@@ -15,13 +16,14 @@ class Download extends Command
     {
         $this->setName('download')
              ->setDescription('nhentai manga downloader')
-             ->addArgument('id', InputArgument::REQUIRED, 'Manga Id');
+             ->addArgument('id', InputArgument::REQUIRED, 'Manga Id')
+             ->addOption('proxy', null, InputOption::VALUE_OPTIONAL);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $downloader = new Downloader($input->getArgument('id'));
+            $downloader = new Downloader($input->getArgument('id'), $input->getOption('proxy'));
             $downloader->start();
         } catch (GuzzleResultCodeError $exception) {
             $output->writeln($exception->getMessage());

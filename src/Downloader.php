@@ -23,12 +23,19 @@ class Downloader
 
     protected $baseWebUrl;
 
-    public function __construct($id)
+    public function __construct($id, $proxy = null)
     {
         $this->id = $id;
-        $this->client = new Client([
+        
+        $clientOption = [
             RequestOptions::TIMEOUT => 10,
-        ]);
+        ];
+        
+        if ($proxy) {
+            $clientOption[RequestOptions::PROXY] = $proxy;
+        }
+        
+        $this->client = new Client($clientOption);
         $this->initNhParams();
     }
 
