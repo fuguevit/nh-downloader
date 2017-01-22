@@ -116,7 +116,9 @@ class Downloader
             mkdir($dir);
         }
         $content = (string) $response->getBody();
-        $file = $dir.'/'.($index + 1).'.jpg';
+
+        $name = sprintf("%04d", $index+1);
+        $file = $dir.'/'.$name.'.jpg';
         file_put_contents($file, $content);
     }
 }
