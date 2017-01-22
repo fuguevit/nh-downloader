@@ -26,15 +26,15 @@ class Downloader
     public function __construct($id, $proxy = null)
     {
         $this->id = $id;
-        
+
         $clientOption = [
             RequestOptions::TIMEOUT => 10,
         ];
-        
+
         if ($proxy) {
             $clientOption[RequestOptions::PROXY] = $proxy;
         }
-        
+
         $this->client = new Client($clientOption);
         $this->initNhParams();
     }
