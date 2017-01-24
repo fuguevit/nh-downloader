@@ -15,7 +15,8 @@ class NHZipArchive extends ZipArchive
      */
     public static function zipFolder($location, $zipName, $removeOriginal = true)
     {
-        $newDirName = end(explode(DIRECTORY_SEPARATOR, rtrim($location, DIRECTORY_SEPARATOR)));
+        $dirs = explode(DIRECTORY_SEPARATOR, rtrim($location, DIRECTORY_SEPARATOR));
+        $newDirName = end($dirs);
         
         $zip = new static;
         $zip->open($zipName, ZipArchive::CREATE);
