@@ -25,13 +25,13 @@ class Download extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $id = $input->getArgument('id');
-        
+
         $this->startDownload($id, $input, $output)
             ->checkCompress($input->getOption('archive'), $id);
 
         $output->writeln('Download Success!');
     }
-    
+
     protected function startDownload($id, InputInterface $input, OutputInterface $output)
     {
         try {
@@ -40,17 +40,19 @@ class Download extends Command
         } catch (GuzzleResultCodeError $exception) {
             $output->writeln($exception->getMessage());
         }
-        
+
         return $this;
     }
-    
+
     protected function checkCompress($flag, $id)
     {
-        if (!$flag) return;
+        if (!$flag) {
+            return;
+        }
 
         $zipFile = __DIR__.'/../../storage/'.$id.'.zip';
         $dirLocation = __DIR__.'/../../storage/'.$id;
-        
+
         NHZipArchive::zipFolder($dirLocation, $zipFile);
     }
 }
