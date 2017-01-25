@@ -2,6 +2,7 @@
 
 namespace Fuguevit\NHDownloader;
 
+use Fuguevit\NHDownloader\Contract\DownloadObserverContract as DownloadObserver;
 use Fuguevit\NHDownloader\Exception\GuzzleResultCodeError;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
@@ -15,6 +16,11 @@ class Downloader
      * @var string
      */
     protected $id;
+
+    /**
+     * @var \Fuguevit\NHDownloader\Contract\DownloadObserverContract;
+     */
+    protected $downloadObserver;
 
     /**
      * @var Client
@@ -37,6 +43,14 @@ class Downloader
 
         $this->client = new Client($clientOption);
         $this->initNhParams();
+    }
+
+    /**
+     * @param DownloadObserver $downloadObserver
+     */
+    public function setDownloadObserver(DownloadObserver $downloadObserver)
+    {
+        $this->downloadObserver = $downloadObserver;
     }
 
     protected function initNhParams()
@@ -91,10 +105,10 @@ class Downloader
         $pool = new Pool($this->client, $requests, [
             'concurrency' => 10,
             'fulfilled'   => function ($response, $index) {
-                $this->handleResponse($response, $index);
+                $this->handleFulfilledResponse($response, $index);
             },
             'rejected' => function ($response, $index) {
-                // do nothing.
+                $this->handleRejectedResponse($response, $index);
             },
         ]);
 
@@ -109,16 +123,27 @@ class Downloader
         }
     }
 
-    protected function handleResponse($response, $index)
+    protected function handleFulfilledResponse($response, $index)
     {
+        $currentPage = $index + 1;
+
         $dir = __DIR__.'/../storage/'.$this->id;
         if (!file_exists($dir)) {
             mkdir($dir);
         }
         $content = (string) $response->getBody();
 
-        $name = sprintf('%04d', $index + 1);
+        $name = sprintf('%04d', $currentPage);
         $file = $dir.'/'.$name.'.jpg';
         file_put_contents($file, $content);
+        
+        $this->downloadObserver->handleSuccess($currentPage);
+    }
+
+    protected function handleRejectedResponse($response, $index)
+    {
+        $currentPage = $index + 1;
+        
+        $this->downloadObserver->handleFailed($currentPage);
     }
 }
