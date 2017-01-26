@@ -136,14 +136,14 @@ class Downloader
         $name = sprintf('%04d', $currentPage);
         $file = $dir.'/'.$name.'.jpg';
         file_put_contents($file, $content);
-        
+
         $this->downloadObserver->handleSuccess($currentPage);
     }
 
     protected function handleRejectedResponse($response, $index)
     {
         $currentPage = $index + 1;
-        
+
         $this->downloadObserver->handleFailed($currentPage);
     }
 }

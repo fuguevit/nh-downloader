@@ -18,7 +18,7 @@ class Download extends Command implements DownloadObserverContract
      * @var OutputInterface
      */
     protected $output;
-    
+
     public function configure()
     {
         $this->setName('download')
@@ -31,7 +31,7 @@ class Download extends Command implements DownloadObserverContract
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->setOutput($output);
-        
+
         $id = $input->getArgument('id');
 
         $this->startDownload($id, $input, $output)
@@ -64,17 +64,17 @@ class Download extends Command implements DownloadObserverContract
 
         NHZipArchive::zipFolder($dirLocation, $zipFile);
     }
-    
+
     protected function setOutput(OutputInterface $output)
     {
         $this->output = $output;
     }
-    
+
     public function handleSuccess($currentPage)
     {
-        $this->output->writeln("Page $currentPage download successful...");   
+        $this->output->writeln("Page $currentPage download successful...");
     }
-    
+
     public function handleFailed($currentPage)
     {
         $this->output->writeln("<error>Page $currentPage download failed!</error>");
