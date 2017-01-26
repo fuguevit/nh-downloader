@@ -2,6 +2,7 @@
 
 namespace Fuguevit\NHDownloader\Command;
 
+use Fuguevit\NHDownloader\Contract\DownloadObserverContract;
 use Fuguevit\NHDownloader\Downloader;
 use Fuguevit\NHDownloader\Exception\GuzzleResultCodeError;
 use Fuguevit\NHDownloader\Helper\NHZipArchive;
@@ -11,8 +12,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Download extends Command
+class Download extends Command implements DownloadObserverContract
 {
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
+    
     public function configure()
     {
         $this->setName('download')
@@ -24,6 +30,8 @@ class Download extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->setOutput($output);
+        
         $id = $input->getArgument('id');
 
         $this->startDownload($id, $input, $output)
@@ -36,6 +44,7 @@ class Download extends Command
     {
         try {
             $downloader = new Downloader($id, $input->getOption('proxy'));
+            $downloader->setDownloadObserver($this);
             $downloader->start();
         } catch (GuzzleResultCodeError $exception) {
             $output->writeln($exception->getMessage());
@@ -54,5 +63,20 @@ class Download extends Command
         $dirLocation = __DIR__.'/../../storage/'.$id;
 
         NHZipArchive::zipFolder($dirLocation, $zipFile);
+    }
+    
+    protected function setOutput(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+    
+    public function handleSuccess($currentPage)
+    {
+        $this->output->writeln("Page $currentPage download successful...");   
+    }
+    
+    public function handleFailed($currentPage)
+    {
+        $this->output->writeln("<error>Page $currentPage download failed!</error>");
     }
 }
