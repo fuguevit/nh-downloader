@@ -42,7 +42,7 @@ class Download extends Command implements DownloadObserverContract
 
     /**
      * @param $id
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return $this
