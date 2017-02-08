@@ -40,6 +40,13 @@ class Download extends Command implements DownloadObserverContract
         $output->writeln('Download Success!');
     }
 
+    /**
+     * @param $id
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return $this
+     */
     protected function startDownload($id, InputInterface $input, OutputInterface $output)
     {
         try {
@@ -53,6 +60,10 @@ class Download extends Command implements DownloadObserverContract
         return $this;
     }
 
+    /**
+     * @param $flag
+     * @param $id
+     */
     protected function checkCompress($flag, $id)
     {
         if (!$flag) {
@@ -65,6 +76,9 @@ class Download extends Command implements DownloadObserverContract
         NHZipArchive::zipFolder($dirLocation, $zipFile);
     }
 
+    /**
+     * @param OutputInterface $output
+     */
     protected function setOutput(OutputInterface $output)
     {
         $this->output = $output;
